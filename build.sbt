@@ -4,6 +4,8 @@ version := "1.0"
 
 scalaVersion := "2.11.8"
 
+val majorScalaVersion = "2.11"
+val sparkVersion = "1.6.1"
 
 scalacOptions ++= Seq(
   "-deprecation",
@@ -20,8 +22,10 @@ scalacOptions ++= Seq(
 libraryDependencies ++= Seq(
   "com.typesafe.slick" %% "slick" % "3.1.1",
   "com.h2database" % "h2" % "1.4.185",
-  "ch.qos.logback" % "logback-classic" % "1.1.2",
   "org.slf4j" % "slf4j-nop" % "1.6.4",
-  "ch.qos.logback" % "logback-classic" % "1.1.7" // for logging
+  "ch.qos.logback" % "logback-classic" % "1.1.7", // for logging
+  "org.apache.spark" % "spark-core_2.11" % "1.6.1",
+  "org.apache.spark" % "spark-sql_2.11" % "1.6.1",
+  "org.apache.spark" % "spark-streaming_2.11" % "1.6.1"
 )
     

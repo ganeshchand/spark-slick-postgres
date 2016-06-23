@@ -1,6 +1,8 @@
 package com.gc.learning.scala.slack
 
+import org.slf4j.LoggerFactory
 import slick.driver.H2Driver.api._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -10,6 +12,9 @@ import scala.concurrent.duration._
   */
 
 object SlickExample extends App {
+
+  def logger = LoggerFactory.getLogger(this.getClass)
+  logger.info("Slick Example Running")
 
   // case class representing a row in our table
   final case class Message(
@@ -43,6 +48,35 @@ object SlickExample extends App {
   // Base query for querying the messages table:
 
   lazy val messages = TableQuery[MessageTable]
+
+  // An example of a uery that selects a subset of messages
+
+  val halSays = messages.filter(_.sender === "HAL")
+
+  // create an in-memory H2 database
+
+  val db = Database.forConfig("SlickExampleDemo")
+
+
+  // Helper method for running a query in this example file:
+
+  def exec[T](program: DBIO[T]): T =
+    Await.result(db.run(program), 2 seconds)
+
+  // create the messages table:
+
+  logger.info("Creating database table")
+  exec(messages.schema.create)
+
+  logger.info("Inserting test data")
+  exec(messages ++= freshTestData)
+
+  logger.info("Running a query that selects all rows")
+  exec(messages.result).foreach(println)
+
+
+  logger.info("Selecting only messages from HAL")
+  exec(halSays.result).foreach(println)
 
 
 }
