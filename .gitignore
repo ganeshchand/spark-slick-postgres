@@ -1,3 +1,7 @@
 .idea
 target
 project/target
+log/test.log
+project/project/
+src/main/scala/test.sc
+

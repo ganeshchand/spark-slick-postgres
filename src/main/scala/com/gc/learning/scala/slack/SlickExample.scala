@@ -3,7 +3,6 @@ package com.gc.learning.scala.slack
 import org.slf4j.LoggerFactory
 import slick.driver.H2Driver.api._
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
@@ -47,11 +46,11 @@ object SlickExample extends App {
 
   // Base query for querying the messages table:
 
-  lazy val messages = TableQuery[MessageTable]
+  lazy val messages = TableQuery[MessageTable] // similar to SELECT *
 
   // An example of a uery that selects a subset of messages
 
-  val halSays = messages.filter(_.sender === "HAL")
+  val halSays = messages.filter(_.sender === "HAL") // applying predicate on base query
 
   // create an in-memory H2 database
 
@@ -76,8 +75,16 @@ object SlickExample extends App {
 
 
   logger.info("Selecting only messages from HAL")
+  println("Selecting only messages from HAL")
   exec(halSays.result).foreach(println)
 
+
+  println("Inserting a new record")
+  exec(messages.insertOrUpdate(Message("Admin", "Hello all, this is a new record.")))
+
+  println("Displaying the latest record")
+
+  exec(messages.result).foreach(println)
 
 }
 
