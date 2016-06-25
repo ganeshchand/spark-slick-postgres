@@ -62,10 +62,9 @@ object SlickExample extends App {
   def exec[T](program: DBIO[T]): T =
     Await.result(db.run(program), 2 seconds)
 
-  // create the messages table:
-
-  logger.info("Creating database table")
-  exec(messages.schema.create)
+  logger.info("Creating the message table")
+  exec(messages.schema.create) // action
+  logger.info(s"Created a table with the following schema:\n ${messages.schema.createStatements.mkString}")
 
   logger.info("Inserting test data")
   exec(messages ++= freshTestData)
@@ -75,15 +74,13 @@ object SlickExample extends App {
 
 
   logger.info("Selecting only messages from HAL")
-  println("Selecting only messages from HAL")
   exec(halSays.result).foreach(println)
 
 
-  println("Inserting a new record")
+  logger.info("Inserting a new record")
   exec(messages.insertOrUpdate(Message("Admin", "Hello all, this is a new record.")))
 
-  println("Displaying the latest record")
-
+  logger.info("Displaying the latest record")
   exec(messages.result).foreach(println)
 
 }
